@@ -1,4 +1,5 @@
-import PoolGraph from "../components/PoolsGraph";
+import PoolGraph from "@/components/PoolsGraph";
+import RatesGraph from "@/components/RatesGraph";
 
 export default function Home() {
 	return (
@@ -9,6 +10,7 @@ export default function Home() {
 				<PoolGraph network="holesky" api="featuredPools"/>
 				<PoolGraph network="holesky" api="allPools"/>
 		</div>
+		<RatesGraph network="holesky" api="rewardRates"/>
 </section>
 	);
 }

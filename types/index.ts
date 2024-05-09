@@ -9,6 +9,13 @@ export interface RoughData {
   values: number[];
 }
 
+export interface RewardRate {
+  date: string;
+  value: number;
+  consensus: number;
+  execution: number;
+}
+
 export interface ApiPool {
   provider: Provider;
   tokens: TokenInfo;

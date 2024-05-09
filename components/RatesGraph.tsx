@@ -1,28 +1,30 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { ApiPool, RoughData } from "@/types";
-import { Pie } from "react-roughviz";
+import { RewardRate, RoughData } from "@/types";
+import { Bar } from "react-roughviz";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 
 async function getData(network: string, api: string) {
   try {
     const response = await fetch(
-      `https://corsproxy.io/?https://${network}.yieldnest.finance/api/v1/${api}?chainId=17000`
+      `https://${network}.yieldnest.finance/api/v1/${api}?chainId=17000`
     );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    return data;
+    console.log(api, data);
+    return data.data;
   } catch (error) {
     console.error("There was a problem fetching the data: ", error);
   }
 }
 
-function formatData(api: ApiPool[]): RoughData {
-  const labels = api.map((data) => data.provider.name);
-  const values = api.map((data) => data.tvl);
+function formatData(api: RewardRate[]): RoughData {
+  const top = api.slice(0, 10);
+  const labels = top.map((data) => data.date);
+  const values = top.map((data) => data.value);
   return { labels, values };
 }
 
@@ -34,7 +36,7 @@ function camelCaseToSentence(camelCase: string): string {
   return sentence;
 }
 
-const PoolsGraph = ({ network, api }: { network: string, api: string }) => {
+const RatesGraph = ({ network, api }: { network: string, api: string }) => {
   const [chartData, setData] = useState<RoughData>({ labels: [], values: [] });
 
   useEffect(() => {
@@ -63,9 +65,9 @@ const PoolsGraph = ({ network, api }: { network: string, api: string }) => {
       </CardHeader>
       <Divider />
       <CardBody className="overflow-visible p-2">
-        <Pie
+        <Bar
           data={chartData}
-          title="Staked TVL"
+          title="% last 10 days"
           colors={[
             "red",
             "orange",
@@ -75,7 +77,7 @@ const PoolsGraph = ({ network, api }: { network: string, api: string }) => {
             "purple",
             "lightblue",
           ]}
-          roughness={8}
+          roughness={3}
           strokeWidth={3}
         />
       </CardBody>
@@ -83,4 +85,4 @@ const PoolsGraph = ({ network, api }: { network: string, api: string }) => {
   );
 };
 
-export default PoolsGraph;
+export default RatesGraph;
